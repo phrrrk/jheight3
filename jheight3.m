@@ -1,5 +1,5 @@
 %% Programm zur Analyse von Counter-Movement-Jumps
-function jumpHeight = jheight3(trialName)
+function [jumpHeight, bodyWeight] = jheight3(trialName, weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp)
 %% Initiale Einstellungen
 testPlot = 1;
 trialRate = 1000;
@@ -14,26 +14,33 @@ trialDataRaw = smooth(trialDataRaw,10);
 
 % Körpergewicht bestimmen
 
-bodyWeight = mean(trialDataRaw(50:500));
+bodyWeight = mean(trialDataRaw(weightRange(1):weightRange(2)));
 
 % Erster Abschnitt - Ausholbewegung
-
-startImpulsTemp = find(trialDataRaw<bodyWeight-bodyWeight/6); % Punkt überschießen
-startAreaReverse = trialDataRaw(startImpulsTemp(1):-1:1); % Vom temporären Punkt bis Anfang
-startImpulsReverse = find(startAreaReverse>=bodyWeight); % Erstes Überschreiten von Gewicht
-startImpuls = startImpulsTemp(1)-startImpulsReverse(1)+1; % Korrektur des Index
-secondArea = trialDataRaw(startImpulsTemp(1)+1:end); % Vom übergeschossenem Punkt bis Ende
-secondImpulsTemp = find(secondArea>=bodyWeight); % Finde erstes Körpergewicht
-secondImpuls = startImpulsTemp(1)+secondImpulsTemp(1); % Korrektur des Index
+if startImpulsTemp == 0
+  startImpulsTemp = find(trialDataRaw<bodyWeight-bodyWeight/6); % Punkt überschießen
+end
+  startAreaReverse = trialDataRaw(startImpulsTemp(1):-1:1); % Vom temporären Punkt bis Anfang
+  startImpulsReverse = find(startAreaReverse>=bodyWeight); % Erstes Überschreiten von Gewicht
+if startImpuls == 0
+  startImpuls = startImpulsTemp(1)-startImpulsReverse(1)+1; % Korrektur des Index
+end
+  secondArea = trialDataRaw(startImpulsTemp(1)+1:end); % Vom übergeschossenem Punkt bis Ende
+  secondImpulsTemp = find(secondArea>=bodyWeight); % Finde erstes Körpergewicht
+if secondImpuls == 0
+  secondImpuls = startImpulsTemp(1)+secondImpulsTemp(1); % Korrektur des Index
+end
 
 % Zweiter Abschnitt - Bremskraftstoß
-
-thirdArea = trialDataRaw(secondImpuls+10:end); % Überschreiten des Punktes bis Ende
-thirdImpulsTemp = find(thirdArea<=bodyWeight); % kleiner gleich Körpergewicht
-thirdImpuls = secondImpuls+10-1+thirdImpulsTemp(1); % Korrektur des Index
-fourthImpulsTemp = find(trialDataRaw==0); % Null finden
-fourthImpuls = fourthImpulsTemp(1); % Index speichern
-
+  thirdArea = trialDataRaw(secondImpuls+10:end); % Überschreiten des Punktes bis Ende
+  thirdImpulsTemp = find(thirdArea<=bodyWeight); % kleiner gleich Körpergewicht
+if thirdImpuls == 0
+  thirdImpuls = secondImpuls+10-1+thirdImpulsTemp(1); % Korrektur des Index
+end
+  fourthImpulsTemp = find(trialDataRaw==0); % Null finden
+if fourthImpuls == 0
+  fourthImpuls = fourthImpulsTemp(1); % Index speichern
+end
 %% Berechnungen
 
 areaStart = trialDataRaw(startImpuls:secondImpuls)-bodyWeight;
@@ -50,9 +57,13 @@ jumpHeight  = ((trapzFinal/(bodyWeight/9.81))^2)/(2*9.81);
 if testPlot == 1
 %   figure
   hold on
-  plot(trialTime,trialDataRaw)
-%   plot(trialTime,trialDataSmooth,'-r')
+  axis([0 trialTime(end) 0 max(trialDataRaw)+20]);
+  xlabel('Zeit (ms)','fontsize',18);
+  ylabel('Kraft (N)','fontsize',18);
   plot([trialTime(1) trialTime(end)],[bodyWeight bodyWeight],'-k')
+  plot(trialTime,trialDataRaw)
+  plot(trialTime(weightRange(1):weightRange(2)),trialDataRaw(weightRange(1):weightRange(2)), '-m')
+%   plot(trialTime,trialDataSmooth,'-r')
   plot(trialTime(startImpulsTemp(1)),trialDataRaw(startImpulsTemp(1)),'xr')
   plot(trialTime(startImpuls),trialDataRaw(startImpuls),'xg')
   plot(trialTime(secondImpuls),trialDataRaw(secondImpuls),'xg')
