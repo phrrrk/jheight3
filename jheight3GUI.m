@@ -18,11 +18,30 @@ function varargout = jheight3GUI(varargin)
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
+% Copyright (C) 2013 Falko Döhring
+% 
+% Permission is hereby granted, free of charge, to any person obtaining a copy of
+% this software and associated documentation files (the "Software"), to deal in the
+% Software without restriction, including without limitation the rights to use,
+% copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+% Software, and to permit persons to whom the Software is furnished to do so,
+% subject to the following conditions:
+% 
+% The above copyright notice and this permission notice shall be included in all
+% copies or substantial portions of the Software.
+% 
+% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+% PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+% HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+% OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+% SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
 % Edit the above text to modify the response to help jheight3GUI
 
-% Last Modified by GUIDE v2.5 13-Apr-2013 12:41:18
+% Last Modified by GUIDE v2.5 16-Apr-2013 09:10:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -141,7 +160,7 @@ if getFile ~= 0
     newFilename = fileCell{1,currentFile};
   end
   
-  [jumpHeight, bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp);
+  [jumpHeight, bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
   jumpHeight = jumpHeight * 100;
   bodyWeight = bodyWeight / 9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -205,7 +224,7 @@ if getFile ~= 0
     newFilename = fileCell{1,currentFile};
   end
   
-  [jumpHeight bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp);
+  [jumpHeight bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
   jumpHeight = jumpHeight * 100;
   bodyWeight = bodyWeight / 9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -246,7 +265,7 @@ cla
 
 fileList = dir(getPath);
 fileCell  = struct2cell(fileList);
-% Einträge 0 setzen, die nicht JPG sind
+% Einträge 0 setzen, die nicht CSV sind
 for knj = 1:length(fileList)
   knjj = length( fileCell{1,knj} );
   if knjj < 3 || strcmpi(fileCell{1,knj}(end-2:end), 'CSV') == 0 
@@ -254,7 +273,7 @@ for knj = 1:length(fileList)
   end
 end
 
-[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp);
+[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
 jumpHeight = jumpHeight * 100;
 bodyWeight = bodyWeight / 9.81;
 jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -407,7 +426,7 @@ while but == 0
   end
   
   cla
-  [jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp);
+  [jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
   jumpHeight = jumpHeight * 100;
   bodyWeight = bodyWeight / 9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -459,7 +478,7 @@ fourthImpuls = handles.fourthImpuls;
 startImpulsTemp = handles.startImpulsTemp;
 
 cla
-[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp);
+[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
 jumpHeight = jumpHeight * 100;
 bodyWeight = bodyWeight / 9.81;
 jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -478,3 +497,37 @@ handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
 
 guidata(hObject, handles);
+
+
+% --- Executes on button press in pbBatch.
+function pbBatch_Callback(hObject, eventdata, handles)
+% hObject    handle to pbBatch (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+cla
+getPath  = uigetdir;
+fileList = dir(getPath);
+fileCell = struct2cell(fileList);
+weightRange = handles.weightRange;
+% Einträge 0 setzen, die nicht CSV sind
+for knj = 1:length(fileList)
+  knjj = length( fileCell{1,knj} );
+  if knjj < 3 || strcmpi(fileCell{1,knj}(end-2:end), 'CSV') == 0 
+    fileCell{1,knj} = 0;
+  end
+end
+l = 1;
+lengthList = length(fileCell);
+for i = 1:lengthList
+  if fileCell{1,i} ~= 0
+    subjectName = [getPath,'/' fileCell{1,i}];
+    [jumpHeight, bodyWeight] = jheight3(subjectName, weightRange, 0, 0, 0, 0, 0, 0);
+    fullList{1,l} = fileCell{1,i};
+    fullList{2,l} = jumpHeight;
+    l = l+1;
+  end
+  waitbar(i/lengthList, 'Auswertung läuft');
+end
+saveName = ['Liste_Hoehen_' date '.xls'];
+% xlswrite(saveName,fullList(2,:))
+msgbox('Auswertung abgeschlossen')
