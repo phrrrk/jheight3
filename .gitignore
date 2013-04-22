@@ -1,4 +1,8 @@
-*.CVS
+*.CSV
+*.csv
+*.xls
+.DS_Store
+*.m~
 *.pdf
 *.docx
 Rohdaten/

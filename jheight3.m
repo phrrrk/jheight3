@@ -83,19 +83,32 @@ jumpHeight  = ((trapzFinal/(bodyWeight/9.81))^2)/(2*9.81);
 %% Testplot
 if testPlot == 1
 %   figure
+  % Plotsettings
+  lineWidthPlot = 1;
+  axisTop = max(trialDataRaw)+20;
+  axisEnd = trialTime(end);
+  textPosX = 32;
+  textPosY = 32;
   hold on
-  axis([0 trialTime(end) 0 max(trialDataRaw)+20]);
+  axis([0 axisEnd 0 axisTop(1)]);
   xlabel('Zeit (ms)','fontsize',18);
   ylabel('Kraft (N)','fontsize',18);
-  plot([trialTime(1) trialTime(end)],[bodyWeight bodyWeight],'-k')
-  plot(trialTime,trialDataRaw)
-  plot(trialTime(weightRange(1):weightRange(2)),trialDataRaw(weightRange(1):weightRange(2)), '-m')
+  
+  % Plots
+  plot([trialTime(1) trialTime(end)],[bodyWeight bodyWeight],'Color', [0.7,0.7,0.7])
+  plot(trialTime,trialDataRaw,'Linewidth',lineWidthPlot)
+  plot(trialTime(weightRange(1):weightRange(2)),trialDataRaw(weightRange(1):weightRange(2)), '-m','Linewidth',lineWidthPlot)
 %   plot(trialTime,trialDataSmooth,'-r')
-  plot(trialTime(startImpulsTemp(1)),trialDataRaw(startImpulsTemp(1)),'xr')
-  plot(trialTime(startImpuls),trialDataRaw(startImpuls),'xg')
-  plot(trialTime(secondImpuls),trialDataRaw(secondImpuls),'xg')
-  plot(trialTime(thirdImpuls),trialDataRaw(thirdImpuls),'xg')
-  plot(trialTime(fourthImpuls),trialDataRaw(fourthImpuls),'xg')
+  plot(trialTime(startImpulsTemp(1)),trialDataRaw(startImpulsTemp(1)),'xr','Linewidth',lineWidthPlot)
+  text(trialTime(startImpulsTemp(1))+textPosX,trialDataRaw(startImpulsTemp(1))+textPosY,'H');
+  plot(trialTime(startImpuls),trialDataRaw(startImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(startImpuls)+textPosX,trialDataRaw(startImpuls)+textPosY,'1');
+  plot(trialTime(secondImpuls),trialDataRaw(secondImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(secondImpuls)+textPosX,trialDataRaw(secondImpuls)+textPosY,'2');
+  plot(trialTime(thirdImpuls),trialDataRaw(thirdImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(thirdImpuls)+textPosX,trialDataRaw(thirdImpuls)+textPosY,'3');
+  plot(trialTime(fourthImpuls),trialDataRaw(fourthImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(fourthImpuls)+textPosX,trialDataRaw(fourthImpuls)+textPosY,'4');
 end
 % reverseTime = 0:length(startAreaReverse)-1;
 % figure

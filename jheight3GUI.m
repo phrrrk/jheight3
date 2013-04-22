@@ -41,7 +41,7 @@ function varargout = jheight3GUI(varargin)
 
 % Edit the above text to modify the response to help jheight3GUI
 
-% Last Modified by GUIDE v2.5 16-Apr-2013 09:10:20
+% Last Modified by GUIDE v2.5 22-Apr-2013 10:41:34
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -82,7 +82,7 @@ handles.getPath = 0;
 handles.fileCell = hObject;
 handles.fileCell = 0;
 handles.weightRange = hObject;
-handles.weightRange = [50 500]; 
+handles.weightRange = [50 1050]; 
 handles.startImpuls = hObject;
 handles.startImpuls = 0;
 handles.secondImpuls = hObject;
@@ -95,12 +95,18 @@ handles.startImpulsTemp = hObject;
 handles.startImpulsTemp = 0;
 handles.bodyWeight = hObject;
 handles.bodyWeight = 0;
+handles.jumpHeight = hObject;
+handles.jumpHeight = 0;
+handles.saveList = hObject;
+handles.saveList = 0;
 
 set(handles.rbStartImpuls,'Value',0);
 set(handles.rbSecondImpuls,'Value',0);
 set(handles.rbThirdImpuls,'Value',0);
 set(handles.rbFourthImpuls,'Value',0);
 set(handles.rbStartImpulsTemp,'Value',1);
+set(handles.editWeightStart,'String',num2str(handles.weightRange(1)));
+set(handles.editWeightEnd,'String',num2str(handles.weightRange(2)));
 
 % Update handles structure
 guidata(hObject, handles);
@@ -160,9 +166,10 @@ if getFile ~= 0
     newFilename = fileCell{1,currentFile};
   end
   
-  [jumpHeight, bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
-  jumpHeight = jumpHeight * 100;
-  bodyWeight = bodyWeight / 9.81;
+  [jumpHeight, bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, ...
+                                      secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
+  jumpHeight = jumpHeight*100;
+  bodyWeight = bodyWeight/9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
   bodyWeightString = num2str(bodyWeight,'% 10.2f');
   set(handles.txtFile, 'String', newFilename);
@@ -181,6 +188,7 @@ handles.secondImpuls = secondImpuls;
 handles.thirdImpuls = thirdImpuls;
 handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
+handles.jumpHeight = jumpHeight;
 
 guidata( hObject, handles );
 
@@ -224,9 +232,10 @@ if getFile ~= 0
     newFilename = fileCell{1,currentFile};
   end
   
-  [jumpHeight bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
-  jumpHeight = jumpHeight * 100;
-  bodyWeight = bodyWeight / 9.81;
+  [jumpHeight bodyWeight] = jheight3([getPath newFilename], weightRange, startImpuls, ...
+                                     secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
+  jumpHeight = jumpHeight*100;
+  bodyWeight = bodyWeight/9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
   bodyWeightString = num2str(bodyWeight,'% 10.2f');
   set(handles.txtFile, 'String', newFilename);
@@ -245,6 +254,7 @@ handles.secondImpuls = secondImpuls;
 handles.thirdImpuls = thirdImpuls;
 handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
+handles.jumpHeight = jumpHeight;
 
 guidata( hObject, handles );
 
@@ -273,7 +283,8 @@ for knj = 1:length(fileList)
   end
 end
 
-[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
+[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, ...
+                                   secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
 jumpHeight = jumpHeight * 100;
 bodyWeight = bodyWeight / 9.81;
 jumpHeightString = num2str(jumpHeight,'% 10.2f');
@@ -294,6 +305,7 @@ handles.secondImpuls = secondImpuls;
 handles.thirdImpuls = thirdImpuls;
 handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
+handles.jumpHeight = jumpHeight;
 
 guidata(hObject, handles);
 
@@ -426,9 +438,10 @@ while but == 0
   end
   
   cla
-  [jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
-  jumpHeight = jumpHeight * 100;
-  bodyWeight = bodyWeight / 9.81;
+  [jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, ...
+                                     secondImpuls, thirdImpuls, fourthImpuls,startImpulsTemp, 1);
+  jumpHeight = jumpHeight*100;
+  bodyWeight = bodyWeight/9.81;
   jumpHeightString = num2str(jumpHeight,'% 10.2f');
   bodyWeightString = num2str(bodyWeight,'% 10.2f');
   set(handles.txtFile, 'String', getFile);
@@ -446,6 +459,8 @@ handles.secondImpuls = secondImpuls;
 handles.thirdImpuls = thirdImpuls;
 handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
+handles.jumpHeight = jumpHeight;
+handles.getFile = getFile;
 
 guidata( hObject, handles );
 
@@ -478,9 +493,10 @@ fourthImpuls = handles.fourthImpuls;
 startImpulsTemp = handles.startImpulsTemp;
 
 cla
-[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
-jumpHeight = jumpHeight * 100;
-bodyWeight = bodyWeight / 9.81;
+[jumpHeight bodyWeight] = jheight3([getPath getFile], weightRange, startImpuls, ...
+                                   secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, 1);
+jumpHeight = jumpHeight*100;
+bodyWeight = bodyWeight/9.81;
 jumpHeightString = num2str(jumpHeight,'% 10.2f');
 bodyWeightString = num2str(bodyWeight,'% 10.2f');
 set(handles.txtFile, 'String', getFile);
@@ -495,39 +511,66 @@ handles.secondImpuls = secondImpuls;
 handles.thirdImpuls = thirdImpuls;
 handles.fourthImpuls = fourthImpuls;
 handles.startImpulsTemp = startImpulsTemp;
+handles.jumpHeight = jumpHeight;
+handles.getFile = getFile;
 
 guidata(hObject, handles);
 
 
-% --- Executes on button press in pbBatch.
-function pbBatch_Callback(hObject, eventdata, handles)
-% hObject    handle to pbBatch (see GCBO)
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-cla
-getPath  = uigetdir;
-fileList = dir(getPath);
-fileCell = struct2cell(fileList);
+saveList = handles.saveList;
+fileCell = handles.fileCell;
+sizeFileCell = size(saveList);
+if saveList ~= 0
+  for i = 1:sizeFileCell(2)
+    saveString = char(fileCell(saveList(2,i)));
+    saveListCell{i,1} = saveString;
+    saveListCell{i,2} = saveList(1,i);
+    saveListCell{i,3} = saveList(3,i);
+  end
+  c = clock;
+  xlswrite('test1.xls', saveListCell);
+end
+% msgbox('Ciao');
+% Hint: delete(hObject) closes the figure
+delete(hObject);
+
+
+% --- Executes on button press in pbSave.
+function pbSave_Callback(hObject, eventdata, handles)
+% hObject    handle to pbSave (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Sprunghöhe, Name, 
+jumpHeight = handles.jumpHeight;
+getFile = handles.getFile;
+saveList = handles.saveList;
+fileCell = handles.fileCell;
 weightRange = handles.weightRange;
-% Einträge 0 setzen, die nicht CSV sind
-for knj = 1:length(fileList)
-  knjj = length( fileCell{1,knj} );
-  if knjj < 3 || strcmpi(fileCell{1,knj}(end-2:end), 'CSV') == 0 
-    fileCell{1,knj} = 0;
+weightRangeSingleValue = weightRange(2)-weightRange(1);
+
+numberForFileame = find(strcmp(fileCell,getFile) == 1);
+if saveList == 0
+  saveList(1,1) = jumpHeight;
+  saveList(2,1) = numberForFileame;
+  saveList(3,1) = weightRangeSingleValue; 
+else 
+  testForExistingFile = find(saveList == numberForFileame);
+  if isempty(testForExistingFile) == 1
+    endOfList = size(saveList);
+    saveList(1,endOfList(2)+1) = jumpHeight;
+    saveList(2,endOfList(2)+1) = numberForFileame;
+    saveList(3,endOfList(2)+1) = weightRangeSingleValue;
+  else
+    saveList(testForExistingFile-1) = jumpHeight;
+    saveList(testForExistingFile+1) = weightRangeSingleValue;
   end
+    
 end
-l = 1;
-lengthList = length(fileCell);
-for i = 1:lengthList
-  if fileCell{1,i} ~= 0
-    subjectName = [getPath,'/' fileCell{1,i}];
-    [jumpHeight, bodyWeight] = jheight3(subjectName, weightRange, 0, 0, 0, 0, 0, 0);
-    fullList{1,l} = fileCell{1,i};
-    fullList{2,l} = jumpHeight;
-    l = l+1;
-  end
-  waitbar(i/lengthList, 'Auswertung läuft');
-end
-saveName = ['Liste_Hoehen_' date '.xls'];
-% xlswrite(saveName,fullList(2,:))
-msgbox('Auswertung abgeschlossen')
+handles.saveList = saveList;
+guidata(hObject, handles);

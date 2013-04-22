@@ -1,12 +1,11 @@
 function [jumpHeight, bodyWeight] = jheight3(trialName, weightRange, startImpuls, secondImpuls, thirdImpuls, fourthImpuls, startImpulsTemp, doPlot)
-  %jheight3 calculates the height of a counter-movement-jump based on force
+  %JHEIGHT3 calculates the height (in m) of a counter-movement-jump based on force
   %data in the z-direction.
-  % Syntax:
+  % 
   %   [jumpHeight, bodyWeight] = jheight3(trialName, weightRange, startImpuls, ...
   %                                       secondImpuls, thirdImpuls, ...
   %                                       fourthImpuls, startImpulsTemp, doPlot)
   %
-  % 
 % This content is released under the MIT License.
 %
 % Copyright (C) 2013 Falko Döhring
@@ -84,19 +83,32 @@ jumpHeight  = ((trapzFinal/(bodyWeight/9.81))^2)/(2*9.81);
 %% Testplot
 if testPlot == 1
 %   figure
+  % Plotsettings
+  lineWidthPlot = 1;
+  axisTop = max(trialDataRaw)+20;
+  axisEnd = trialTime(end);
+  textPosX = axisEnd/350;
+  textPos
   hold on
-  axis([0 trialTime(end) 0 max(trialDataRaw)+20]);
+  axis([0 axisEnd 0 axisTop(1)]);
   xlabel('Zeit (ms)','fontsize',18);
   ylabel('Kraft (N)','fontsize',18);
-  plot([trialTime(1) trialTime(end)],[bodyWeight bodyWeight],'-k')
-  plot(trialTime,trialDataRaw)
-  plot(trialTime(weightRange(1):weightRange(2)),trialDataRaw(weightRange(1):weightRange(2)), '-m')
+  
+  % Plots
+  plot([trialTime(1) trialTime(end)],[bodyWeight bodyWeight],'Color', [0.7,0.7,0.7])
+  plot(trialTime,trialDataRaw,'Linewidth',lineWidthPlot)
+  plot(trialTime(weightRange(1):weightRange(2)),trialDataRaw(weightRange(1):weightRange(2)), '-m','Linewidth',lineWidthPlot)
 %   plot(trialTime,trialDataSmooth,'-r')
-  plot(trialTime(startImpulsTemp(1)),trialDataRaw(startImpulsTemp(1)),'xr')
-  plot(trialTime(startImpuls),trialDataRaw(startImpuls),'xg')
-  plot(trialTime(secondImpuls),trialDataRaw(secondImpuls),'xg')
-  plot(trialTime(thirdImpuls),trialDataRaw(thirdImpuls),'xg')
-  plot(trialTime(fourthImpuls),trialDataRaw(fourthImpuls),'xg')
+  plot(trialTime(startImpulsTemp(1)),trialDataRaw(startImpulsTemp(1)),'xr','Linewidth',lineWidthPlot)
+  text(trialTime(startImpulsTemp(1))+25,trialDataRaw(startImpulsTemp(1))+25,'H');
+  plot(trialTime(startImpuls),trialDataRaw(startImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(startImpuls)+25,trialDataRaw(startImpuls)+25,'1');
+  plot(trialTime(secondImpuls),trialDataRaw(secondImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(secondImpuls)+25,trialDataRaw(secondImpuls)+25,'2');
+  plot(trialTime(thirdImpuls),trialDataRaw(thirdImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(thirdImpuls)+25,trialDataRaw(thirdImpuls)+25,'3');
+  plot(trialTime(fourthImpuls),trialDataRaw(fourthImpuls),'ok','Linewidth',lineWidthPlot)
+  text(trialTime(fourthImpuls)+25,trialDataRaw(fourthImpuls)+25,'4');
 end
 % reverseTime = 0:length(startAreaReverse)-1;
 % figure
