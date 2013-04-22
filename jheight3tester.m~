@@ -1,7 +1,0 @@
-%% jheight3 tester
-
-for i = 1:10
-  for k = 1:5
-    trialName = ['sub_no_', num2str(i), 'trial_', num2str(k), '.csv'];
-    jumpHeight = jheight3(trialName);
-    dataList{i,k} = trialName
