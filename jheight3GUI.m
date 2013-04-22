@@ -241,9 +241,6 @@ if getFile ~= 0
   set(handles.txtFile, 'String', newFilename);
   set(handles.txtJumpHeight, 'String', ['Sprunghöhe: ' jumpHeightString ' cm']);
   set(handles.txtBodyWeight, 'String', ['Körpergewicht: ' bodyWeightString ' kg']);
-
-  
-  % Werte setzen
   
 end
 handles.getFile = newFilename;
