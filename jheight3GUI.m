@@ -530,10 +530,10 @@ if saveList ~= 0
     saveListCell{i,3} = saveList(3,i);
   end
   c = clock;
-  xlswrite('test1.xls', saveListCell);
+  saveString = [date '_' num2str(c(4)) num2str(c(5)) '_Sprunghoehe.xls'];
+  xlswrite(saveString, saveListCell);
 end
-% msgbox('Ciao');
-% Hint: delete(hObject) closes the figure
+
 delete(hObject);
 
 
